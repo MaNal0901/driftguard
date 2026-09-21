@@ -1,0 +1,24 @@
+artifact_path: file:C:/Users/4B/Desktop/DriftGuard/mlruns/1/models/m-e5fb8971ce8246169669e01ef2932f9a/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.13.14
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.1
+    skops_trusted_types:
+    - sklearn.tree._tree.Tree
+mlflow_version: 3.16.1
+model_id: m-e5fb8971ce8246169669e01ef2932f9a
+model_size_bytes: 43057225
+model_uuid: m-e5fb8971ce8246169669e01ef2932f9a
+prompts: null
+run_id: f37fa41e9d164cb0a5cf26f8f9edf106
+utc_time_created: '2026-09-21 09:22:31.229196'

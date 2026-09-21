@@ -1,0 +1,38 @@
+# Data & ML
+pandas
+numpy
+scikit-learn
+joblib
+statsmodels
+
+# Tracking & versioning
+mlflow
+dvc
+
+# Monitoring de drift
+evidently==0.4.33
+
+# API
+fastapi
+uvicorn[standard]
+pydantic
+
+# Dashboard
+streamlit
+plotly
+
+# Notebooks (EDA)
+jupyter
+ipykernel
+
+# Config
+python-dotenv
+holidays
+
+# Tests
+pytest
+httpx
+
+# Qualité de code (CI)
+flake8
+black

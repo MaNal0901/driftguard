@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    container_name: driftguard-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+    env_file:
+      - .env
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: driftguard-dashboard
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./reports:/app/reports
+      - ./data/processed:/app/data/processed
+      - ./models:/app/models
+    env_file:
+      - .env
+    depends_on:
+      - api

@@ -1,0 +1,35 @@
+stages:
+  preprocessing:
+    cmd: python -m src.data.preprocessing
+    deps:
+      - src/data/preprocessing.py
+      - data/raw/PJME_hourly.csv
+    outs:
+      - data/processed/train.csv
+      - data/processed/reference.csv
+      - data/processed/current.csv
+
+  train:
+    cmd: python -m src.models.train
+    deps:
+      - src/models/train.py
+      - data/processed/train.csv
+      - data/processed/reference.csv
+    outs:
+      - models/energy_forecaster.joblib
+    metrics:
+      - reports/train_metrics.json:
+          cache: false
+
+  drift_check:
+    cmd: python -m src.monitoring.drift_check
+    deps:
+      - src/monitoring/drift_check.py
+      - data/processed/reference.csv
+      - data/processed/current.csv
+    outs:
+      - reports/drift_report.html:
+          cache: false
+    metrics:
+      - reports/drift_summary.json:
+          cache: false
