@@ -23,7 +23,7 @@ mlartifacts/
 # Modèles entraînés (versionnés via DVC/artifacts CI, pas Git)
 models/*.joblib
 models/*.pkl
-
+!models/.gitkeep
 # DVC cache local
 /.dvc/cache
 /.dvc/tmp
