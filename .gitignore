@@ -1,0 +1,48 @@
+# Environnements
+venv/
+env/
+__pycache__/
+*.pyc
+.Python
+
+# Variables d'environnement / secrets
+.env
+
+# Données (versionnées via DVC, pas Git)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/raw/*.dvc
+
+# MLflow
+mlruns/
+mlflow.db
+mlartifacts/
+
+# Modèles entraînés (versionnés via DVC/artifacts CI, pas Git)
+models/*.joblib
+models/*.pkl
+
+# DVC cache local
+/.dvc/cache
+/.dvc/tmp
+
+# Rapports générés
+reports/*.html
+reports/*.json
+
+# Docker
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
