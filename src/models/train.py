@@ -154,8 +154,8 @@ def run():
             f"RMSE: {train_metrics['rmse']:.1f} | R²: {train_metrics['r2']:.4f}"
         )
     print(
-            f"[train] VAL (2016) → MAE: {val_metrics['mae']:.1f} | "
-            f"RMSE: {val_metrics['rmse']:.1f} | R²: {val_metrics['r2']:.4f}"
+        f"[train] VAL (2016) → MAE: {val_metrics['mae']:.1f} | "
+        f"RMSE: {val_metrics['rmse']:.1f} | R²: {val_metrics['r2']:.4f}"
     )
 
 
