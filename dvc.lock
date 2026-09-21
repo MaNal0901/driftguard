@@ -1,0 +1,74 @@
+schema: '2.0'
+stages:
+  preprocessing:
+    cmd: python -m src.data.preprocessing
+    deps:
+    - path: data/raw/PJME_hourly.csv
+      hash: md5
+      md5: 5908f274ab73d5eaeb88654a8d238df3
+      size: 4070265
+    - path: src/data/preprocessing.py
+      hash: md5
+      md5: 86fbefe84936e098359d7ddbd83f3369
+      size: 6613
+    outs:
+    - path: data/processed/current.csv
+      hash: md5
+      md5: dcfff3d4a45817e217bb1a174592b0be
+      size: 1327419
+    - path: data/processed/reference.csv
+      hash: md5
+      md5: 80bf4fc93f09febd3d45b75a092a9b40
+      size: 1331238
+    - path: data/processed/train.csv
+      hash: md5
+      md5: bfb74dee1ea571f4938c8a4071683ecc
+      size: 18591966
+  train:
+    cmd: python -m src.models.train
+    deps:
+    - path: data/processed/reference.csv
+      hash: md5
+      md5: 80bf4fc93f09febd3d45b75a092a9b40
+      size: 1331238
+    - path: data/processed/train.csv
+      hash: md5
+      md5: bfb74dee1ea571f4938c8a4071683ecc
+      size: 18591966
+    - path: src/models/train.py
+      hash: md5
+      md5: bc17f96dd4f440070d0b21449695e6e8
+      size: 5760
+    outs:
+    - path: models/energy_forecaster.joblib
+      hash: md5
+      md5: 12bb4e33891a5498f68a7260b58dbb68
+      size: 40056481
+    - path: reports/train_metrics.json
+      hash: md5
+      md5: 60aaa317b39d7f5ba12b6d4a3796a14a
+      size: 230
+  drift_check:
+    cmd: python -m src.monitoring.drift_check
+    deps:
+    - path: data/processed/current.csv
+      hash: md5
+      md5: dcfff3d4a45817e217bb1a174592b0be
+      size: 1327419
+    - path: data/processed/reference.csv
+      hash: md5
+      md5: 80bf4fc93f09febd3d45b75a092a9b40
+      size: 1331238
+    - path: src/monitoring/drift_check.py
+      hash: md5
+      md5: c7eb5057f5531ee5cb80f139442281db
+      size: 4920
+    outs:
+    - path: reports/drift_report.html
+      hash: md5
+      md5: 34c362cdfcd5218e2656f00d76ab1fb9
+      size: 3216733
+    - path: reports/drift_summary.json
+      hash: md5
+      md5: fdbe88da1632382559b3e8b4549b15b6
+      size: 289
