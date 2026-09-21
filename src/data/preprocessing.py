@@ -124,6 +124,7 @@ def split_train_reference_current(
 
     return train, reference, current
 
+
 def save_processed(train, reference, current, out_dir: str = PROCESSED_DIR):
     """
     Objectif dans le pipeline : matérialiser les 3 datasets sur disque
@@ -138,8 +139,12 @@ def save_processed(train, reference, current, out_dir: str = PROCESSED_DIR):
     current.to_csv(os.path.join(out_dir, "current.csv"), index=False)
 
     print(f"[preprocessing] Données sauvegardées dans {out_dir}/")
-    print(f"  train.csv     : {len(train)} lignes ({train['year'].min()}-{train['year'].max()})")
-    print(f"  reference.csv : {len(reference)} lignes (année {reference['year'].iloc[0]})")
+    print(
+        f"  train.csv     : {len(train)} lignes ({train['year'].min()}-{train['year'].max()})"
+    )
+    print(
+        f"  reference.csv : {len(reference)} lignes (année {reference['year'].iloc[0]})"
+    )
     print(f"  current.csv   : {len(current)} lignes (année {current['year'].iloc[0]})")
 
 

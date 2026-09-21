@@ -39,7 +39,14 @@ def fake_multi_year_df():
     frames = []
     for year in range(2010, 2018):
         dates = pd.date_range(start=f"{year}-01-01", periods=n_per_year, freq="h")
-        frames.append(pd.DataFrame({"Datetime": dates, "PJME_MW": np.random.uniform(20000, 50000, n_per_year)}))
+        frames.append(
+            pd.DataFrame(
+                {
+                    "Datetime": dates,
+                    "PJME_MW": np.random.uniform(20000, 50000, n_per_year),
+                }
+            )
+        )
     df = pd.concat(frames).reset_index(drop=True)
     df["year"] = df["Datetime"].dt.year
     return df
@@ -72,9 +79,18 @@ def test_add_calendar_features_creates_expected_columns(fake_raw_df):
     enriched = add_calendar_features(cleaned)
 
     expected_columns = {
-        "year", "month", "hour", "dayofweek", "is_weekend", "is_holiday",
-        "hour_sin", "hour_cos", "month_sin", "month_cos",
-        "dayofweek_sin", "dayofweek_cos",
+        "year",
+        "month",
+        "hour",
+        "dayofweek",
+        "is_weekend",
+        "is_holiday",
+        "hour_sin",
+        "hour_cos",
+        "month_sin",
+        "month_cos",
+        "dayofweek_sin",
+        "dayofweek_cos",
     }
     assert expected_columns.issubset(set(enriched.columns))
 
@@ -84,7 +100,14 @@ def test_cyclical_encoding_is_bounded(fake_raw_df):
     cleaned = clean_data(fake_raw_df)
     enriched = add_calendar_features(cleaned)
 
-    for col in ["hour_sin", "hour_cos", "month_sin", "month_cos", "dayofweek_sin", "dayofweek_cos"]:
+    for col in [
+        "hour_sin",
+        "hour_cos",
+        "month_sin",
+        "month_cos",
+        "dayofweek_sin",
+        "dayofweek_cos",
+    ]:
         assert enriched[col].between(-1, 1).all()
 
 
@@ -94,7 +117,10 @@ def test_split_train_reference_current_disjoint(fake_multi_year_df):
     entre train, reference et current.
     """
     train, reference, current = split_train_reference_current(
-        fake_multi_year_df, train_years=(2010, 2015), reference_year=2016, current_year=2017
+        fake_multi_year_df,
+        train_years=(2010, 2015),
+        reference_year=2016,
+        current_year=2017,
     )
 
     train_years = set(train["year"].unique())
@@ -108,7 +134,10 @@ def test_split_train_reference_current_disjoint(fake_multi_year_df):
 
 def test_split_sizes(fake_multi_year_df):
     train, reference, current = split_train_reference_current(
-        fake_multi_year_df, train_years=(2010, 2015), reference_year=2016, current_year=2017
+        fake_multi_year_df,
+        train_years=(2010, 2015),
+        reference_year=2016,
+        current_year=2017,
     )
     assert len(train) == 100 * 6  # 2010-2015 = 6 années
     assert len(reference) == 100

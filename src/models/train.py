@@ -23,10 +23,14 @@ EXPERIMENT_NAME = os.getenv("MLFLOW_EXPERIMENT_NAME", "driftguard-energy-forecas
 # Features calendaires validées dans l'EDA — définies UNE SEULE FOIS ici,
 # réutilisées telles quelles dans predict.py et drift_check.py
 FEATURE_COLUMNS = [
-    "hour_sin", "hour_cos",
-    "month_sin", "month_cos",
-    "dayofweek_sin", "dayofweek_cos",
-    "is_weekend", "is_holiday",
+    "hour_sin",
+    "hour_cos",
+    "month_sin",
+    "month_cos",
+    "dayofweek_sin",
+    "dayofweek_cos",
+    "is_weekend",
+    "is_holiday",
 ]
 TARGET_COLUMN = "PJME_MW"
 
@@ -136,7 +140,8 @@ def run():
         mlflow.log_metrics({f"val_{k}": v for k, v in val_metrics.items()})
 
         mlflow.sklearn.log_model(
-            model, name="model",
+            model,
+            name="model",
             skops_trusted_types=["sklearn.tree._tree.Tree"],
         )
 
@@ -144,10 +149,14 @@ def run():
         model_path = os.path.join(MODEL_DIR, f"{MODEL_NAME}.joblib")
         joblib.dump(model, model_path)
 
-        print(f"[train] TRAIN → MAE: {train_metrics['mae']:.1f} | RMSE: {train_metrics['rmse']:.1f} | R²: {train_metrics['r2']:.4f}")
-        print(f"[train] VAL (2016) → MAE: {val_metrics['mae']:.1f} | RMSE: {val_metrics['rmse']:.1f} | R²: {val_metrics['r2']:.4f}")
-        print(f"[train] Modèle sauvegardé -> {model_path}")
-        print(f"[train] Run MLflow ID: {mlflow.active_run().info.run_id}")
+        print(
+            f"[train] TRAIN → MAE: {train_metrics['mae']:.1f} | "
+            f"RMSE: {train_metrics['rmse']:.1f} | R²: {train_metrics['r2']:.4f}"
+        )
+    print(
+            f"[train] VAL (2016) → MAE: {val_metrics['mae']:.1f} | "
+            f"RMSE: {val_metrics['rmse']:.1f} | R²: {val_metrics['r2']:.4f}"
+    )
 
 
 if __name__ == "__main__":
