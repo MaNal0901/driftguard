@@ -29,6 +29,7 @@ Each stage is a standalone script, chained together by DVC (`dvc.yaml`) and, in 
 | Drift detection | Evidently |
 | Model serving | FastAPI |
 | Monitoring dashboard | Streamlit |
+| Workflow automation | n8n |
 | Containerization | Docker, Docker Compose |
 | CI/CD | GitHub Actions |
 | Model | scikit-learn (RandomForestRegressor) |
@@ -75,6 +76,24 @@ The pipeline therefore tracks two signals separately:
 
 Retraining is triggered off target drift, not feature drift, since that's the signal that actually corresponds to model degradation.
 
+## Automated monitoring (n8n)
+
+The drift-check loop described above (`/drift` → decide → retrain) doesn't run on its own — something needs to poll it, decide whether to act, and notify a human. That orchestration layer is built as an n8n workflow rather than a cron script, mainly to keep the "when/how to react" logic visually inspectable and easy to extend (a new alert channel, an extra condition) without touching Python.
+
+**Flow:** `Schedule Trigger` → `HTTP Request` (polls `/drift`) → `IF` (`retraining_recommended == true`) → on the true branch, a Telegram alert is sent and a `workflow_dispatch` call triggers the `Retrain Model` GitHub Action remotely; on the false branch, a simple status message confirms no action is needed.
+
+![n8n DriftGuard Monitor workflow](docs/images/n8n-workflow.png)
+
+When drift is detected, an alert is sent to Telegram with the drift score and the retraining recommendation:
+
+![Telegram drift alert](docs/images/telegram-alert.png)
+
+The same event triggers `Retrain Model` on GitHub Actions without manual intervention:
+
+![Retrain Model workflow run](docs/images/github-actions-retrain.png)
+
+This closes the loop from detection to retraining: nothing in this chain requires a person to notice the drift report, decide to act, or manually kick off training.
+
 ## Project structure
 
 ```
@@ -89,7 +108,7 @@ driftguard/
 ├── tests/                     unit tests (synthetic data, no dependency on the raw CSV)
 ├── dvc.yaml                   pipeline stages (preprocessing → train → drift_check)
 ├── Dockerfile, Dockerfile.dashboard, docker-compose.yml
-└── .github/workflows/ci-cd.yml
+└── .github/workflows/ci-cd.yml, retrain.yml
 ```
 
 ## Running it
@@ -143,6 +162,8 @@ All fixtures are synthetic, so the suite doesn't require the raw dataset to be p
 ## CI/CD
 
 GitHub Actions runs on every push: linting (flake8, black), the unit test suite, and a build of both Docker images. It stops there rather than re-running the DVC pipeline on the runners — the DVC remote in this setup is local storage, which the runners can't reach. In a production setup, pointing the remote at S3 or GCS would make `dvc pull && dvc repro` a straightforward addition to the workflow.
+
+A separate workflow, `retrain.yml`, is dispatched remotely (see "Automated monitoring" above) and runs the training pipeline on a small, committed sample of the dataset (2014 onward), rather than the full raw CSV — a trade-off made for the CI runners to be self-contained.
 
 ## Roadmap
 
