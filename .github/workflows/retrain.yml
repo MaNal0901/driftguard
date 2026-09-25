@@ -1,0 +1,36 @@
+name: Retrain Model
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Raison du déclenchement'
+        required: false
+        default: 'Drift detected'
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run training pipeline (sample dataset)
+        env:
+          DATA_RAW_PATH: data/raw/PJME_hourly_sample.csv
+        run: |
+          python -m src.data.preprocessing
+          python -m src.models.train
+
+      - name: Upload trained model
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrained-model
+          path: models/
