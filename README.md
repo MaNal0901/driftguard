@@ -176,3 +176,14 @@ Documented here rather than implemented, since they fall outside what this proje
 | Holiday eve flags | Consumption often shifts the day before a holiday, not just on it |
 | Time-series-specific models (Prophet, SARIMA) | Purpose-built for multi-seasonality (daily + weekly + annual) |
 | Cloud DVC remote | Would let CI actually reproduce the pipeline, not just build and test the code |
+## Key Features
+
+- 🔄 End-to-end MLOps pipeline with DVC
+- 📊 Experiment tracking with MLflow
+- 🔍 Automated data and target drift detection with Evidently
+- 🚨 Automated drift alerts through Telegram
+- 🤖 Automatic retraining triggered through GitHub Actions
+- 🐳 Containerized services with Docker Compose
+- 🧪 Automated testing with pytest
+- 🚀 FastAPI model serving
+- 📈 Streamlit monitoring dashboard
